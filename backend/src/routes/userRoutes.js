@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
 
@@ -33,7 +34,30 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
 	try {
-	} catch (error) {}
+		const user = await User.findOne({ email: req.body.email });
+		if (!user) {
+			return res
+				.status(200)
+				.send({ message: 'User not found', success: false });
+		}
+
+		const isMatch = await bcrypt.compare(req.body.password, user.password);
+		if (!isMatch) {
+			return res
+				.status(200)
+				.send({ message: 'Incorrect password', success: false });
+		} else {
+			const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+				expiresIn: '1d',
+			});
+			return res
+				.status(200)
+				.send({ message: 'Login successful', success: true, token });
+		}
+	} catch (error) {
+		console.log('Error logging in', error);
+		res.status(500).send({ message: 'Error logging in', success: false });
+	}
 });
 
 module.exports = router;
