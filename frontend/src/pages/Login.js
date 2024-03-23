@@ -2,9 +2,14 @@ import { Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Login = () => {
 	const navigate = useNavigate();
+
+	const { loading } = useSelector((state) => state.alerts);
+
+	console.log('loading', loading);
 	const onFinish = async (values) => {
 		console.log('Received values of form: ', values);
 
