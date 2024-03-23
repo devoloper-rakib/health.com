@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
+const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/register', async (req, res) => {
 	try {
@@ -57,6 +58,30 @@ router.post('/login', async (req, res) => {
 	} catch (error) {
 		console.log('Error logging in', error);
 		res.status(500).send({ message: 'Error logging in', success: false });
+	}
+});
+
+// Point : protected routes
+router.post('/get-user-info-by-id', authMiddleware, async (req, res) => {
+	try {
+		const user = await User.findOne({ _id: req.body.userId });
+		if (!user)
+			return res
+				.status(200)
+				.send({ message: 'User does not exist', success: false });
+
+		res.status(200).send({
+			success: true,
+			data: {
+				name: user.name,
+				email: user.email,
+			},
+		});
+	} catch (error) {
+		console.log('Error getting user info', error);
+		res
+			.status(500)
+			.send({ message: 'Error getting user info', success: false });
 	}
 });
 
