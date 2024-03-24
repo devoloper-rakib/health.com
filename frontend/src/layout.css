@@ -33,3 +33,33 @@
 	height: 82vh;
 	width: 100%;
 }
+
+.menu {
+	margin-top: 100px;
+}
+
+.menu-item {
+	margin-top: 1.9rem;
+}
+
+.menu-item a {
+	color: rgba(255, 255, 255, 0.783);
+	text-decoration: none;
+	font-size: 18px;
+}
+
+.menu-item i {
+	color: rgba(255, 255, 255, 0.758);
+	text-decoration: none;
+	font-size: 18px;
+	margin: 0 15px;
+}
+
+.active-menu-item {
+	color: white;
+	background-color: #002828;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+/* Point:  */
