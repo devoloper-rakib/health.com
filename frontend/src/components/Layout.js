@@ -1,9 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 
 import '../layout.css';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Layout = ({ children }) => {
+	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
+
+	const { user } = useSelector((state) => state.user);
 
 	const userMenu = [
 		{
@@ -35,12 +40,14 @@ const Layout = ({ children }) => {
 
 	const menuToBeRendered = userMenu;
 
+	// TODO: Side bar collapsed need to more optimize
+
 	return (
 		<div className='main'>
 			<div className='d-flex layout'>
-				<div className='sidebar'>
+				<div className={`sidebar`}>
 					<div className='sidebar-header'>
-						<h3>Health.com</h3>
+						{!collapsed ? <h3>Health.com</h3> : <h1> Hc </h1>}
 					</div>
 
 					<div className='menu'>
@@ -54,14 +61,35 @@ const Layout = ({ children }) => {
 									key={index}
 								>
 									<i className={menu.icon}></i>
-									<Link to={menu.path}> {menu.name} </Link>
+
+									{!collapsed && <Link to={menu.path}>{menu.name}</Link>}
 								</div>
 							);
 						})}
 					</div>
 				</div>
 				<div className='content'>
-					<div className='header'>header</div>
+					<div className='header'>
+						{collapsed ? (
+							<i
+								className='ri-menu-2-fill header-action-icon'
+								onClick={() => setCollapsed(!true)}
+							></i>
+						) : (
+							<i
+								className='ri-close-fill header-action-icon'
+								onClick={() => setCollapsed(!false)}
+							></i>
+						)}
+
+						<div className='d-flex align-items-center px-4'>
+							<i className='ri-notification-line header-action-icon px-3'></i>
+
+							<Link className='anchor' to='/profile'>
+								{user?.name}
+							</Link>
+						</div>
+					</div>
 					<div className='body'> {children} </div>
 				</div>
 			</div>
