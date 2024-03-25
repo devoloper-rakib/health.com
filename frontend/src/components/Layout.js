@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import '../layout.css';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 const Layout = ({ children }) => {
 	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const { user } = useSelector((state) => state.user);
 
@@ -29,16 +30,35 @@ const Layout = ({ children }) => {
 		{
 			name: 'Profile',
 			path: '/profile',
-			icon: 'ri-user-line',
-		},
-		{
-			name: 'Logout',
-			path: '/logout',
-			icon: 'ri-login-box-line',
+			icon: 'ri-file-user-fill',
 		},
 	];
 
-	const menuToBeRendered = userMenu;
+	const adminMenu = [
+		{
+			name: 'Home',
+			path: '/',
+			icon: 'ri-home-line',
+		},
+		{
+			name: 'Users',
+			path: '/users',
+			icon: 'ri-user-fill',
+		},
+		{
+			name: 'Doctors',
+			path: 'doctors',
+			icon: 'ri-nurse-fill',
+		},
+
+		{
+			name: 'Profile',
+			path: '/profile',
+			icon: 'ri-file-user-fill',
+		},
+	];
+
+	const menuToBeRendered = user?.isAdmin ? adminMenu : userMenu;
 
 	// TODO: Side bar collapsed need to more optimize
 
@@ -47,7 +67,11 @@ const Layout = ({ children }) => {
 			<div className='d-flex layout'>
 				<div className={`sidebar`}>
 					<div className='sidebar-header'>
-						{!collapsed ? <h3>Health.com</h3> : <h3> Hc </h3>}
+						{!collapsed ? (
+							<h3 className='logo'>Health.com</h3>
+						) : (
+							<h3 className='logo'> Hc </h3>
+						)}
 					</div>
 
 					<div className='menu'>
@@ -66,6 +90,16 @@ const Layout = ({ children }) => {
 								</div>
 							);
 						})}
+						<div
+							className='d-flex menu-item'
+							onClick={() => {
+								localStorage.clear();
+								navigate('/login');
+							}}
+						>
+							<i className='ri-logout-box-line'></i>
+							{!collapsed && <Link to='/login'>Logout</Link>}
+						</div>
 					</div>
 				</div>
 				<div className='content'>

@@ -65,6 +65,7 @@ router.post('/login', async (req, res) => {
 router.post('/get-user-info-by-id', authMiddleware, async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: req.body.userId });
+		user.password = undefined;
 		if (!user)
 			return res
 				.status(200)
@@ -72,10 +73,7 @@ router.post('/get-user-info-by-id', authMiddleware, async (req, res) => {
 
 		res.status(200).send({
 			success: true,
-			data: {
-				name: user.name,
-				email: user.email,
-			},
+			data: user,
 		});
 	} catch (error) {
 		console.log('Error getting user info', error);

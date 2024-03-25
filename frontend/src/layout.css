@@ -27,6 +27,12 @@
 	justify-content: space-between;
 }
 
+.logo {
+	color: white;
+	font-weight: bold;
+	transition: all linear 0.3s;
+}
+
 .body {
 	background-color: white;
 	border-radius: 5px;
