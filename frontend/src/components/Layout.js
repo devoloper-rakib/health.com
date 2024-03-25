@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
 			<div className='d-flex layout'>
 				<div className={`sidebar`}>
 					<div className='sidebar-header'>
-						{!collapsed ? <h3>Health.com</h3> : <h1> Hc </h1>}
+						{!collapsed ? <h3>Health.com</h3> : <h3> Hc </h3>}
 					</div>
 
 					<div className='menu'>

@@ -27,10 +27,13 @@ const ProtectedRoute = (props) => {
 				dispatch(setUser(response.data.data));
 			} else {
 				dispatch(hideLoading());
+				localStorage.clear();
 				navigate('/login');
 			}
 		} catch (error) {
 			dispatch(hideLoading());
+			localStorage.clear();
+
 			navigate('/login');
 		}
 	};
