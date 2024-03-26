@@ -5,6 +5,13 @@
 }
 
 /* / global styles */
+
+.page-title {
+	font-size: 25px;
+	color: rgba(0, 0, 0, 0.807);
+	font-weight: bold;
+}
+
 .card {
 	box-shadow: 0 0 2px gray;
 	border-radius: 0 !important;
@@ -13,6 +20,7 @@
 .card-title {
 	font-size: 1.5rem;
 	font-weight: bold;
+	color: rgba(0, 0, 0, 0.496);
 }
 
 .normal-text {
@@ -44,7 +52,8 @@
 	border: 1px solid rgba(128, 128, 128, 0.524) !important;
 	height: 40px !important;
 }
-input:focus {
+input:focus,
+.ant-picker {
 	outline: none !important;
 	box-shadow: none !important;
 	border: 1px solid gray !important;
@@ -57,6 +66,16 @@ label {
 	margin: 10px 0 !important;
 }
 
+.ant-picker {
+	border-radius: 2px !important;
+	border: 1px solid rgba(128, 128, 128, 0.524) !important;
+	height: 40px !important;
+}
+
+.ant-picker-input input {
+	border: none !important;
+}
+
 .primary-button {
 	background-color: #005555 !important;
 	border-color: #005555 !important;
@@ -64,6 +83,7 @@ label {
 	width: 100% !important;
 	color: white !important;
 	font-size: 1rem !important;
+	width: max-content !important;
 }
 
 .anchor {
