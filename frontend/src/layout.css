@@ -80,6 +80,11 @@
 	padding-left: 10px;
 }
 
+.ant-scroll-number,
+.ant-badge-count {
+	transform: translate(-48%, -50%) !important;
+}
+
 /* Point:  */
 
 @media screen and (max-width: 768px) {

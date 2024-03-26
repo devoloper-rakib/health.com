@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
 const authMiddleware = require('../middleware/authMiddleware');
+const DoctorModel = require('../models/doctorModel');
 
+// Point: Register end point
 router.post('/register', async (req, res) => {
 	try {
 		const userExists = await User.findOne({ email: req.body.email });
@@ -33,6 +35,7 @@ router.post('/register', async (req, res) => {
 	}
 });
 
+// Point: Login End point
 router.post('/login', async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
@@ -80,6 +83,37 @@ router.post('/get-user-info-by-id', authMiddleware, async (req, res) => {
 		res
 			.status(500)
 			.send({ message: 'Error getting user info', success: false });
+	}
+});
+
+// Point : Apply Doctor
+router.post('/apply-doctor-account', authMiddleware, async (req, res) => {
+	try {
+		const newDoctor = new DoctorModel({ ...req.body, status: 'pending' });
+		await newDoctor.save();
+		const adminUser = await User.findOne({ isAdmin: true }); // will only have one admin
+
+		const unseenNotifications = adminUser.unseenNotifications;
+		unseenNotifications.push({
+			type: 'new-doctor-request',
+			message: `A new doctor account has been requested for ${newDoctor.firstName} ${newDoctor.lastName}`,
+			data: {
+				doctorId: newDoctor._id,
+				name: newDoctor.firstName + ' ' + newDoctor.lastName,
+			},
+			onClickPath: '/admin/doctors',
+		});
+		await User.findByIdAndUpdate(adminUser._id, { unseenNotifications });
+
+		res.status(200).send({
+			success: true,
+			message: 'Doctor account applied request sent successfully',
+		});
+	} catch (error) {
+		console.log('Error applying doctor account', error);
+		res
+			.status(500)
+			.send({ message: 'Error applying doctor account', success: false });
 	}
 });
 

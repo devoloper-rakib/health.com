@@ -40,13 +40,14 @@ const DoctorSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
-		consultationHours: {
-			type: Object,
+
+		timings: {
+			type: Array,
 			required: true,
 		},
-		timings: {
-			type: array,
-			required: true,
+		status: {
+			type: String,
+			default: 'pending',
 		},
 	},
 	{
