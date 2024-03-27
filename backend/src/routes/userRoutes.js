@@ -117,4 +117,59 @@ router.post('/apply-doctor-account', authMiddleware, async (req, res) => {
 	}
 });
 
+// Point :User Notification all seen endpoint:
+router.post(
+	'/mark-all-notifications-as-seen',
+	authMiddleware,
+	async (req, res) => {
+		const user = await User.findOne({ _id: req.body.userId });
+		const unseenNotifications = user.unseenNotifications;
+		const seenNotifications = user.seenNotifications;
+		seenNotifications.push(...unseenNotifications);
+		user.unseenNotifications = [];
+		user.seenNotifications = seenNotifications;
+		const updateUser = await User.findByIdAndUpdate(user._id, user);
+
+		updateUser.password = undefined;
+
+		res.status(200).send({
+			success: true,
+			message: 'All notifications marked as seen',
+			data: updateUser,
+		});
+		try {
+		} catch (error) {
+			console.log('Error while marking all notifications as seen', error);
+			res.status(500).send({
+				message: 'Error while marking all notifications as seen',
+				success: false,
+			});
+		}
+	},
+);
+
+// Point: Delete all Notifications end point;
+router.post('/delete-all-notifications', authMiddleware, async (req, res) => {
+	try {
+		const user = await User.findOne({ _id: req.body.userId });
+		user.seenNotifications = [];
+		user.unseenNotifications = [];
+
+		const updatedUser = await User.findByIdAndUpdate(user._id, user);
+		updatedUser.password = undefined;
+
+		res.status(200).send({
+			success: true,
+			message: 'All notifications deleted successfully',
+			data: updatedUser,
+		});
+	} catch (error) {
+		console.log('Error while deleting all notifications', error);
+		res.status(500).send({
+			message: 'Error while deleting all notifications',
+			success: false,
+		});
+	}
+});
+
 module.exports = router;

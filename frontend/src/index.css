@@ -90,6 +90,7 @@ label {
 	color: black !important;
 	text-decoration: underline;
 	font-size: 1rem !important;
+	cursor: pointer !important;
 }
 .anchor:hover {
 	text-decoration: underline !important;
