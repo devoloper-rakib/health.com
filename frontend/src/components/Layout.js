@@ -43,12 +43,12 @@ const Layout = ({ children }) => {
 		},
 		{
 			name: 'Users',
-			path: '/users',
+			path: '/admin/userslist',
 			icon: 'ri-user-fill',
 		},
 		{
 			name: 'Doctors',
-			path: 'doctors',
+			path: '/admin/doctorslist',
 			icon: 'ri-nurse-fill',
 		},
 

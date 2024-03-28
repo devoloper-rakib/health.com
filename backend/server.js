@@ -6,6 +6,7 @@ const dbConfig = require('./config/dbConfig');
 app.use(express.json());
 
 const userRoutes = require('./src/routes/userRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 const port = process.env.PORT || 5000;
 
@@ -14,5 +15,6 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
