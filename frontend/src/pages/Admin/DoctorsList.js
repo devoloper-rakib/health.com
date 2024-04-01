@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { hideLoading, showLoading } from '../../redux/alertsSlice';
 import { Table } from 'antd';
+import toast from 'react-hot-toast';
 
 const DoctorsList = () => {
 	const [doctors, setDoctors] = useState([]);
@@ -23,6 +24,33 @@ const DoctorsList = () => {
 			}
 		} catch (error) {
 			dispatch(hideLoading());
+		}
+	};
+
+	const changeDoctorStatus = async (record, status) => {
+		try {
+			dispatch(showLoading());
+			const response = await axios.post(
+				'/api/admin/change-doctor-account-status',
+				{
+					doctorId: record._id,
+					status: status,
+					userId: record.userId,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`,
+					},
+				},
+			);
+			dispatch(hideLoading());
+			if (response.data.success) {
+				toast.success(response.data.message);
+				getDoctorData();
+			}
+		} catch (error) {
+			dispatch(hideLoading());
+			toast.error('Something went wrong');
 		}
 	};
 
@@ -62,10 +90,20 @@ const DoctorsList = () => {
 			render: (text, record) => (
 				<div className='d-flex'>
 					{record.status === 'pending' && (
-						<span className='anchor'>Approve</span>
+						<span
+							className='anchor'
+							onClick={() => changeDoctorStatus(record, 'approved')}
+						>
+							Approve
+						</span>
 					)}
 					{record.status === 'approved' && (
-						<span className='anchor'>Block</span>
+						<span
+							className='anchor'
+							onClick={() => changeDoctorStatus(record, 'blocked')}
+						>
+							Block
+						</span>
 					)}
 				</div>
 			),

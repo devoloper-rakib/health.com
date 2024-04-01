@@ -8,13 +8,15 @@ module.exports = async (req, res, next) => {
 			if (err) {
 				return res
 					.status(401)
-					.send({ message: 'Unauthorized', success: false });
+					.send({ message: 'Unauthorized Access', success: false });
 			}
 
 			req.body.userId = decoded.id;
 			next();
 		});
 	} catch (error) {
-		return res.status(401).send({ message: 'Unauthorized', success: false });
+		return res
+			.status(401)
+			.send({ message: 'Unauthorized Access', success: false });
 	}
 };

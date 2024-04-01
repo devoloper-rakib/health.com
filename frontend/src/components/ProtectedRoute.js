@@ -11,6 +11,8 @@ const ProtectedRoute = (props) => {
 
 	const dispatch = useDispatch();
 
+	console.log('user', user);
+
 	const getUser = async () => {
 		try {
 			dispatch(showLoading());

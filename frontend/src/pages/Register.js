@@ -45,13 +45,18 @@ const Register = () => {
 						<Input placeholder='Enter your Password' type='password' />
 					</Form.Item>
 
-					<Button className='primary-button my-2' htmlType='submit'>
-						Register
-					</Button>
+					<div className='d-flex flex-column'>
+						<Button
+							className='primary-button my-2 full-width-button'
+							htmlType='submit'
+						>
+							Register
+						</Button>
 
-					<Link className='anchor ' to='/login'>
-						Click here to Login
-					</Link>
+						<Link className='anchor ' to='/login'>
+							Click here to Login
+						</Link>
+					</div>
 				</Form>
 			</div>
 		</div>
