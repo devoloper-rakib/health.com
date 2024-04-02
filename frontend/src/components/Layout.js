@@ -35,6 +35,25 @@ const Layout = ({ children }) => {
 		},
 	];
 
+	const doctorMenu = [
+		{
+			name: 'Home',
+			path: '/',
+			icon: 'ri-home-line',
+		},
+		{
+			name: 'Appointments',
+			path: '/appointments',
+			icon: 'ri-file-list-line',
+		},
+
+		{
+			name: 'Profile',
+			path: `/doctor/profile/${user?._id}`,
+			icon: 'ri-file-user-fill',
+		},
+	];
+
 	const adminMenu = [
 		{
 			name: 'Home',
@@ -59,7 +78,11 @@ const Layout = ({ children }) => {
 		},
 	];
 
-	const menuToBeRendered = user?.isAdmin ? adminMenu : userMenu;
+	const menuToBeRendered = user?.isAdmin
+		? adminMenu
+		: user?.isDoctor
+		? doctorMenu
+		: userMenu;
 
 	// TODO: Side bar collapsed need to more optimize
 

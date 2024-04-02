@@ -7,6 +7,7 @@ app.use(express.json());
 
 const userRoutes = require('./src/routes/userRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
+const doctorRoutes = require('./src/routes/doctorsRoutes');
 
 const port = process.env.PORT || 5000;
 
@@ -16,5 +17,6 @@ app.get('/health', (req, res) => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/doctor', doctorRoutes);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
