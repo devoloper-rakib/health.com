@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Button, Col, Form, Input, Row, TimePicker } from 'antd';
 
 const DoctorForm = ({ onFinish, initialValues }) => {
@@ -6,7 +7,15 @@ const DoctorForm = ({ onFinish, initialValues }) => {
 			layout='vertical'
 			onFinish={onFinish}
 			autoComplete='true'
-			initialValues={initialValues}
+			initialValues={{
+				...initialValues,
+				...(initialValues && {
+					timings: [
+						moment(initialValues?.timings[0], 'HH:mm'),
+						moment(initialValues?.timings[1], 'HH:mm'),
+					],
+				}),
+			}}
 		>
 			<h1 className='card-title mt-3'>Personal Information</h1>
 			<Row gutter={20}>
@@ -101,17 +110,17 @@ const DoctorForm = ({ onFinish, initialValues }) => {
 						<Input placeholder='Enter Your Consultation Fee' type='number' />
 					</Form.Item>
 				</Col>
-
-				{/* <Col span={8} lg={8} xs={24} sm={24}>
+				{/* // Point : timings */}
+				<Col span={8} lg={8} xs={24} sm={24}>
 					<Form.Item
 						required
 						label='Timings'
 						name='timings'
 						rules={[{ required: true }]}
 					>
-						<TimePicker.RangePicker />
+						<TimePicker.RangePicker format='HH:mm' />
 					</Form.Item>
-				</Col> */}
+				</Col>
 			</Row>
 
 			<div className='d-flex justify-content-end'>

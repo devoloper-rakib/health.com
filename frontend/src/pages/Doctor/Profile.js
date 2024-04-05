@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 
 import DoctorForm from '../../components/DoctorForm';
 import Layout from '../../components/Layout';
 import { showLoading, hideLoading } from '../../redux/alertsSlice';
-import { useEffect, useState } from 'react';
 
 const Profile = () => {
 	const dispatch = useDispatch();
@@ -25,6 +26,10 @@ const Profile = () => {
 				{
 					...values,
 					userId: user?._id,
+					timings: [
+						moment(values?.timings[0]).format('HH:mm'),
+						moment(values?.timings[1]).format('HH:mm'),
+					],
 				},
 				{
 					headers: {

@@ -1,10 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-import '../layout.css';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Badge } from 'antd';
 
+import '../layout.css';
 const Layout = ({ children }) => {
 	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
@@ -86,15 +85,23 @@ const Layout = ({ children }) => {
 
 	// TODO: Side bar collapsed need to more optimize
 
+	const role = user?.isAdmin ? 'Admin' : user?.isDoctor ? 'Doctor' : 'User';
+
 	return (
 		<div className='main'>
 			<div className='d-flex layout'>
 				<div className={`sidebar`}>
 					<div className='sidebar-header'>
 						{!collapsed ? (
-							<h3 className='logo'>Health.com</h3>
+							<>
+								<h3 className='logo'> Health.com </h3>
+								<h3 className='role'>{role}</h3>
+							</>
 						) : (
-							<h3 className='logo'> Hc </h3>
+							<>
+								<h3 className='logo'> Hc </h3>
+								<h3 className='role'>{role}</h3>
+							</>
 						)}
 					</div>
 

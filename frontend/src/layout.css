@@ -33,6 +33,12 @@
 	transition: all linear 0.3s;
 }
 
+.role {
+	color: #fff;
+	font-size: 14px;
+	margin-top: -10px;
+}
+
 .body {
 	background-color: white;
 	border-radius: 5px;

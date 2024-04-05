@@ -6,6 +6,7 @@ import axios from 'axios';
 import { showLoading, hideLoading } from '../redux/alertsSlice';
 import Layout from '../components/Layout';
 import DoctorForm from '../components/DoctorForm';
+import moment from 'moment';
 const ApplyDoctor = () => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.user);
@@ -20,7 +21,11 @@ const ApplyDoctor = () => {
 				'/api/user/apply-doctor-account',
 				{
 					...values,
-					userId: user._id,
+					userId: user?._id,
+					timings: [
+						moment(values.timings[0]).format('HH:mm'),
+						moment(values.timings[1]).format('HH:mm'),
+					],
 				},
 				{
 					headers: {
