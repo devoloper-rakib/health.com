@@ -172,4 +172,22 @@ router.post('/delete-all-notifications', authMiddleware, async (req, res) => {
 	}
 });
 
+// Point: get all doctors Approved list.
+router.get('/get-all-approved-doctors', authMiddleware, async (req, res) => {
+	try {
+		const doctors = await DoctorModel.find({ status: 'approved' });
+
+		res.status(200).send({
+			message: 'Doctors fetched successfully',
+			success: true,
+			data: doctors,
+		});
+	} catch (error) {
+		console.log('Error getting all doctors', error);
+		res
+			.status(500)
+			.send({ message: 'Error getting all doctors', success: false });
+	}
+});
+
 module.exports = router;

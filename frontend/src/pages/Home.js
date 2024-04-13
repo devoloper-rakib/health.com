@@ -1,21 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
+import { Col, Row } from 'antd';
+import Doctor from '../components/Doctor';
+import { useDispatch } from 'react-redux';
+
+import { showLoading, hideLoading } from '../redux/alertsSlice';
 
 const Home = () => {
+	const [doctors, setDoctors] = useState([]);
+
+	const dispatch = useDispatch();
+
 	const getData = async () => {
 		try {
-			const response = await axios.post(
-				'/api/user/get-user-info-by-id',
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ` + localStorage.getItem('token'),
-					},
+			dispatch(showLoading());
+			const response = await axios.get('/api/user/get-all-approved-doctors', {
+				headers: {
+					Authorization: `Bearer ` + localStorage.getItem('token'),
 				},
-			);
-			console.log(response.data);
+			});
+
+			dispatch(hideLoading());
+			if (response.data.success) {
+				setDoctors(response.data.data);
+			}
 		} catch (error) {
+			dispatch(hideLoading());
 			console.log('Token error', error);
 		}
 	};
@@ -25,7 +36,13 @@ const Home = () => {
 	}, []);
 	return (
 		<Layout>
-			<h1>home page</h1>
+			<Row gutter={20}>
+				{doctors.map((doctor, index) => (
+					<Col key={index} span={8} xs={24} lg={8}>
+						<Doctor doctor={doctor} />
+					</Col>
+				))}
+			</Row>
 		</Layout>
 	);
 };
