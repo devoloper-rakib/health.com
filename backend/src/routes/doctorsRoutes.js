@@ -24,6 +24,25 @@ router.post('/get-doctor-info-by-user-id', authMiddleware, async (req, res) => {
 	}
 });
 
+// Point : Get Doctor Information by id
+router.post('/get-doctor-info-by-id', authMiddleware, async (req, res) => {
+	try {
+		const doctor = await DoctorModel.findOne({ _id: req.body.doctorId });
+
+		res.status(200).send({
+			message: 'Doctor info fetched successfully',
+			success: true,
+			data: doctor,
+		});
+	} catch (error) {
+		console.log('Error getting doctor info by user id', error);
+		res.status(500).send({
+			message: 'Error getting doctor info by user id',
+			success: false,
+		});
+	}
+});
+
 // Point: Update Doctor Profile endpoint
 router.post('/update-doctor-profile', authMiddleware, async (req, res) => {
 	try {

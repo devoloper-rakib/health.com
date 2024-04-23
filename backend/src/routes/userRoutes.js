@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const authMiddleware = require('../middleware/authMiddleware');
 const DoctorModel = require('../models/doctorModel');
+const AppointmentModel = require('../models/appointmentModel');
 
 // Point: Register end point
 router.post('/register', async (req, res) => {
@@ -183,10 +184,38 @@ router.get('/get-all-approved-doctors', authMiddleware, async (req, res) => {
 			data: doctors,
 		});
 	} catch (error) {
-		console.log('Error getting all doctors', error);
+		console.log('Error getting all  doctors', error);
 		res
 			.status(500)
 			.send({ message: 'Error getting all doctors', success: false });
+	}
+});
+
+router.post('/book-appointment', authMiddleware, async (req, res) => {
+	try {
+		req.body.status = 'pending';
+		const newAppointment = new AppointmentModel(req.body);
+		await newAppointment.save();
+
+		// Point : Pushing notification to doctor based on his userId
+		const user = await User.findOne({ _id: req.body.doctorInfo.userId });
+		user?.unseenNotifications.push({
+			type: 'new-appointment-request',
+			message: `A new appointment request has been made by ${req.body.userInfo.name}`,
+			onClickPath: '/doctor/appointments',
+		});
+		await user.save();
+
+		res.status(200).send({
+			message: 'Appointment booked successfully',
+			success: true,
+		});
+	} catch (error) {
+		console.log('Error while booking appointment', error);
+		res.status(500).send({
+			message: 'Error while booking appointment',
+			success: false,
+		});
 	}
 });
 
