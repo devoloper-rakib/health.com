@@ -14,7 +14,6 @@ const Profile = () => {
 
 	const [doctor, setDoctor] = useState(null);
 
-	const navigate = useNavigate();
 	const params = useParams();
 	const { user } = useSelector((state) => state.user);
 

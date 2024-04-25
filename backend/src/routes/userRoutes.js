@@ -3,6 +3,7 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 const User = require('../models/userModel');
 const authMiddleware = require('../middleware/authMiddleware');
@@ -191,6 +192,7 @@ router.get('/get-all-approved-doctors', authMiddleware, async (req, res) => {
 	}
 });
 
+// Point : Book appointment end point
 router.post('/book-appointment', authMiddleware, async (req, res) => {
 	try {
 		req.body.status = 'pending';
@@ -219,4 +221,42 @@ router.post('/book-appointment', authMiddleware, async (req, res) => {
 	}
 });
 
+// Point: Check if doctor is available or not
+router.post('/check-availability', authMiddleware, async (req, res) => {
+	try {
+		const date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
+		const fromTime = moment(req.body.time, 'HH:mm')
+			.subtract(60, 'minutes')
+			.toISOString();
+		const toTime = moment(req.body.time, 'HH:mm')
+			.add(60, 'minutes')
+			.toISOString();
+
+		const doctorId = req.body.doctorId;
+		const appointments = await AppointmentModel.find({
+			doctorId,
+			date,
+			time: { $gte: fromTime, $lte: toTime },
+			status: 'approved',
+		});
+
+		if (appointments.length > 0) {
+			res.status(200).send({
+				message: 'Doctor is not available',
+				success: false,
+			});
+		} else {
+			res.status(200).send({
+				message: 'Doctor is available',
+				success: true,
+			});
+		}
+	} catch (error) {
+		console.log('Error while checking doctor availability', error);
+		res.status(500).send({
+			message: 'Error while checking doctor availability',
+			success: false,
+		});
+	}
+});
 module.exports = router;

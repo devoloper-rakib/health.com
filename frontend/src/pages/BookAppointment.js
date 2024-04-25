@@ -14,9 +14,8 @@ const BookAppointment = () => {
 
 	const [doctor, setDoctor] = useState(null);
 	const [isAvailable, setIsAvailable] = useState(false);
-	const [selectedTimings, setSelectedTimings] = useState([]);
 	const [date, setDate] = useState();
-	const [time, setTime] = useState();
+	const [time, setTime] = useState(moment().startOf('day'));
 
 	const params = useParams();
 	const dispatch = useDispatch();
@@ -46,6 +45,38 @@ const BookAppointment = () => {
 		}
 	};
 
+	console.log('time', moment(time).format('HH:mm'));
+	const checkAvailability = () => {
+		try {
+			dispatch(showLoading());
+			const response = axios.post(
+				'/api/user/check-availability',
+				{
+					doctorId: params?.doctorId,
+					date,
+					time,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`,
+					},
+				},
+			);
+
+			dispatch(hideLoading());
+			if (response.data.success) {
+				toast.success(response.data.message);
+				// setIsAvailable(response.data.available);
+			} else {
+				toast.error(response.data.message);
+			}
+		} catch (error) {
+			console.log(error);
+			dispatch(hideLoading());
+			toast.error('Error getting doctor data');
+		}
+	};
+
 	const bookNow = async () => {
 		try {
 			dispatch(showLoading());
@@ -56,7 +87,7 @@ const BookAppointment = () => {
 					userId: user._id,
 					doctorInfo: doctor,
 					userInfo: user,
-					time: time,
+					time: moment(time).format('HH:mm'),
 					date: date,
 				},
 				{
@@ -80,6 +111,8 @@ const BookAppointment = () => {
 	useEffect(() => {
 		getDoctorData();
 	}, []);
+
+	console.log('time', moment(time).format('HH:mm'));
 
 	return (
 		<Layout>
@@ -107,12 +140,14 @@ const BookAppointment = () => {
 								<TimePicker
 									format='HH:mm'
 									className='mt-3'
-									onChange={(value) => {
-										setTime(moment(value).format('HH:mm'));
-									}}
+									defaultValue={time}
+									onChange={(value) => setTime(value)}
 								/>
 
-								<Button className='primary-button mt-3 full-width-button'>
+								<Button
+									onClick={checkAvailability}
+									className='primary-button mt-3 full-width-button'
+								>
 									Check Availability
 								</Button>
 
