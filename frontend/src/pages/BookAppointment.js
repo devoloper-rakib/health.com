@@ -46,15 +46,15 @@ const BookAppointment = () => {
 	};
 
 	console.log('time', moment(time).format('HH:mm'));
-	const checkAvailability = () => {
+	const checkAvailability = async () => {
 		try {
 			dispatch(showLoading());
-			const response = axios.post(
-				'/api/user/check-availability',
+			const response = await axios.post(
+				'/api/user/check-booking-availability',
 				{
-					doctorId: params?.doctorId,
-					date,
-					time,
+					doctorId: params.doctorId,
+					date: date,
+					time: time,
 				},
 				{
 					headers: {
@@ -62,18 +62,16 @@ const BookAppointment = () => {
 					},
 				},
 			);
-
 			dispatch(hideLoading());
 			if (response.data.success) {
 				toast.success(response.data.message);
-				// setIsAvailable(response.data.available);
+				setIsAvailable(true);
 			} else {
 				toast.error(response.data.message);
 			}
 		} catch (error) {
-			console.log(error);
+			toast.error('Error booking appointment');
 			dispatch(hideLoading());
-			toast.error('Error getting doctor data');
 		}
 	};
 
@@ -87,7 +85,7 @@ const BookAppointment = () => {
 					userId: user._id,
 					doctorInfo: doctor,
 					userInfo: user,
-					time: moment(time).format('HH:mm'),
+					time: time,
 					date: date,
 				},
 				{
@@ -133,9 +131,7 @@ const BookAppointment = () => {
 							<div className='d-flex flex-column pt-2'>
 								<DatePicker
 									format='DD-MM-YYYY'
-									onChange={(value) =>
-										setDate(moment(value).format('DD-MM-YYYY'))
-									}
+									onChange={(value) => setDate(value)}
 								/>
 								<TimePicker
 									format='HH:mm'

@@ -196,6 +196,9 @@ router.get('/get-all-approved-doctors', authMiddleware, async (req, res) => {
 router.post('/book-appointment', authMiddleware, async (req, res) => {
 	try {
 		req.body.status = 'pending';
+		req.body.date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
+		req.body.time = moment(req.body.time, 'HH:mm').toISOString();
+
 		const newAppointment = new AppointmentModel(req.body);
 		await newAppointment.save();
 
@@ -222,22 +225,19 @@ router.post('/book-appointment', authMiddleware, async (req, res) => {
 });
 
 // Point: Check if doctor is available or not
-router.post('/check-availability', authMiddleware, async (req, res) => {
+router.post('/check-booking-availability', authMiddleware, async (req, res) => {
 	try {
 		const date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
 		const fromTime = moment(req.body.time, 'HH:mm')
-			.subtract(60, 'minutes')
+			.subtract(1, 'hours')
 			.toISOString();
-		const toTime = moment(req.body.time, 'HH:mm')
-			.add(60, 'minutes')
-			.toISOString();
+		const toTime = moment(req.body.time, 'HH:mm').add(1, 'hours').toISOString();
 
 		const doctorId = req.body.doctorId;
 		const appointments = await AppointmentModel.find({
 			doctorId,
 			date,
 			time: { $gte: fromTime, $lte: toTime },
-			status: 'approved',
 		});
 
 		if (appointments.length > 0) {
